@@ -1,6 +1,8 @@
 ## Lua script for Yimmenu to play various GTA 5 animations.
 
-![Screenshot 2024-02-23 182559](https://github.com/xesdoog/SAMURAI-s-Animations/assets/66764345/cfb1f8e7-7bef-47ad-b8ba-a4e47c818ba7)
+
+![samurais_animations](https://github.com/xesdoog/SAMURAI-s-Animations/assets/66764345/a50ed87c-4fb3-40fb-b210-8692bf63fb0a)
+
 
 ## FAQ :
 
