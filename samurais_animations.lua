@@ -34,8 +34,6 @@ local animlist = {
     { dict = "rcmnigel1c", anim = "hailing_whistle_waive_a", name = "Whistle", propHash = 0, boneID = 0, posx = 0.0, posy = 0.0, posz = 0.0, rotx = 0.0, roty = 0.0, rotz = 0.0, flag = 51, ptfxdict = "", ptfxname = "", ptfxscale = 0, ptfxOffx = 0.0, ptfxOffy = 0.0, ptfxOffz = 0.0},
 }
 
--- // type1 : attach prop to bone & play anim // type2 : no props, has PTFX // type3 : spawn prop in front of ped & play anim // type4 : spawn prop frozen, nocoll at bone pisotion and play anim //trail_splash_blood //shitting blood fx : ent_sht_blood
-
 local anim_index = 1
 
 event.register_handler(menu_event.ScriptsReloaded, function()
