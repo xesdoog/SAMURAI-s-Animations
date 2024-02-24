@@ -17,9 +17,9 @@ _Why are there only a few animations?_
 
 ## Known Issues :
 
-- Sometimes when stopping an animation, the player's character may clip through the ground. This happens with low positioned animations like sitting or lying down. I don't know why but for now, just tap W after stopping the animation and you should be positioned correctly.
+- ~~Sometimes when stopping an animation, the player's character may clip through the ground. This happens with low positioned animations like sitting or lying down. I don't know why but for now, just tap W after stopping the animation and you should be positioned correctly.~~ **FIXED.**
 
-- ~~When changing to a different animation without stopping the previous one, the prop will become stuck to your character so make sure yo press the **Stop** button before choosing a different animation.~~ **FIXED** *(n00b mistake)*.
+- ~~When changing to a different animation without stopping the previous one, the prop will become stuck to your character so make sure yo press the **Stop** button before choosing a different animation.~~ **FIXED.** *(n00b mistake)*.
 
 ## Credits and Shoutouts :
 
