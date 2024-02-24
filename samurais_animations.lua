@@ -198,6 +198,7 @@ ImGui.SameLine()
             STREAMING.REMOVE_NAMED_PTFX_ASSET(info.ptfxdict)
             GRAPHICS.STOP_PARTICLE_FX_LOOPED(loopedFX)
             TASK.CLEAR_PED_TASKS(ped)
+	    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(ped, coords.x, coords.y, coords.z, false, false, false)
         end)
     end
 end)
