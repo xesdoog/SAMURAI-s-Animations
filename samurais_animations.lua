@@ -200,5 +200,4 @@ ImGui.SameLine()
             TASK.CLEAR_PED_TASKS(ped)
         end)
     end
-local keybind 
 end)
