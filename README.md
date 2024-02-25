@@ -1,8 +1,12 @@
 ## Lua script for Yimmenu to play various GTA 5 animations.
 
+![samurais_animations](https://github.com/xesdoog/SAMURAI-s-Animations/assets/66764345/be26aff9-5ad8-4918-92d4-a9bee03bf3df)
 
-![samurais_animations](https://github.com/xesdoog/SAMURAI-s-Animations/assets/66764345/a50ed87c-4fb3-40fb-b210-8692bf63fb0a)
+## Usage :
 
+- Download both _samurais_animations.lua_ and _animdata.lua_ and place them in _%AppData%\YimMenu\scripts_
+- Open **YimMenu**, select **SAMURAIs Animations**, choose an animation from the list then press **Play**. You can now close the menu.
+- To stop playing an animation you can either open the menu again and press **Stop** or simply press ' **X** ' on keyboard / ' **LT** ' on controller.
 
 ## FAQ :
 
