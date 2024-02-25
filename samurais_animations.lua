@@ -39,13 +39,13 @@ end
 
 local function displayFilteredList()
     updatefilteredAnims()
-
     local animNames = {}
     for _, anim in ipairs(filteredAnims) do
         table.insert(animNames, anim.name)
     end
     anim_index, used = ImGui.ListBox(" ", anim_index, animNames, #filteredAnims)
 end
+
 anim_player:add_imgui(displayFilteredList)
 
 anim_player:add_separator()
@@ -83,7 +83,6 @@ local forwardY = ENTITY.GET_ENTITY_FORWARD_Y(ped)
                     STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(info.propHash)
                     prop = OBJECT.CREATE_OBJECT(info.propHash, 0.0,0.0,0, true, true, false)
                     ENTITY.ATTACH_ENTITY_TO_ENTITY(prop, ped, boneIndex, info.posx, info.posy, info.posz, info.rotx, info.roty, info.rotz, false, false, false, false, 2, true, 1)
-                    ENTITY.FREEZE_ENTITY_POSITION(prop, true)
                     TASK.TASK_PLAY_ANIM(ped, info.dict, info.anim, 4.0, -4.0, -1, info.flag, 1.0, false, false, false)
                     is_playing_anim = true
 
@@ -117,6 +116,7 @@ local forwardY = ENTITY.GET_ENTITY_FORWARD_Y(ped)
                     prop = OBJECT.CREATE_OBJECT(info.propHash, coords.x + (forwardX), coords.y + (forwardY), coords.z, true, true, false)
                     ENTITY.SET_ENTITY_HEADING(prop, heading -180)
                     OBJECT.PLACE_OBJECT_ON_GROUND_PROPERLY(prop)
+		    ENTITY.FREEZE_ENTITY_POSITION(prop, true)
                     TASK.TASK_PLAY_ANIM(ped, info.dict, info.anim, 4.0, -4.0, -1, info.flag, 1.0, false, false, false)
                     is_playing_anim = true
 
