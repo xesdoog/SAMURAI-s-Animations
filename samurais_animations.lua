@@ -4,19 +4,18 @@ anim_player = gui.get_tab("SAMURAI's Animations")
 
 local animlist = require ("animdata")
 
-local anim_index = 1
+local anim_index = 0
 
-anim_player:add_text("Search animations :")
+anim_player:add_text("Search:")
 
 local searchQuery = ""
 
 local is_typing = false
-script.register_looped("Animations", function()
+script.register_looped("-_-", function()
 	if is_typing then
 		PAD.DISABLE_ALL_CONTROL_ACTIONS(0)
 	end
 end)
-
 anim_player:add_imgui(function()
     searchQuery, used = ImGui.InputText("", searchQuery, 32)
     if ImGui.IsItemActive() then
@@ -24,7 +23,7 @@ anim_player:add_imgui(function()
 	else
 		is_typing = false
 	end
-    ImGui.PushItemWidth(350)
+    ImGui.PushItemWidth(300)
 end)
 
 local filteredAnims = {}
@@ -35,6 +34,9 @@ local function updatefilteredAnims()
             table.insert(filteredAnims, anim)
         end
     end
+    table.sort(animlist, function(a, b)
+        return a.name < b.name
+    end)
 end
 
 local function displayFilteredList()
@@ -50,23 +52,17 @@ anim_player:add_imgui(displayFilteredList)
 
 anim_player:add_separator()
 
-anim_player:add_text("TIP : You can stop a currently playing animation \nby pressing 'X' on keyboard or 'LT' on controller.")
-
-anim_player:add_separator()
-
 anim_player:add_imgui(function()
-
 local info = filteredAnims[anim_index+1]
 local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PLAYER.PLAYER_ID())
 local coords = ENTITY.GET_ENTITY_COORDS(ped, false)
 local heading = ENTITY.GET_ENTITY_HEADING(ped)
 local forwardX = ENTITY.GET_ENTITY_FORWARD_X(ped)
 local forwardY = ENTITY.GET_ENTITY_FORWARD_Y(ped)
-local is_playing_anim = false
 local boneIndex = PED.GET_PED_BONE_INDEX(ped, info.boneID)
 local bonecoords = PED.GET_PED_BONE_COORDS(ped, info.boneID)
-local function cleanup()
-    script.run_in_fiber(function(fixthisshit)
+function cleanup()
+    script.run_in_fiber(function()
         TASK.CLEAR_PED_TASKS(ped)
         ENTITY.DELETE_ENTITY(prop1)
         ENTITY.SET_ENTITY_AS_NO_LONGER_NEEDED(prop1)
@@ -82,11 +78,9 @@ local function cleanup()
             STREAMING.REMOVE_NAMED_PTFX_ASSET(info.ptfxdict)
             coroutine.yield()
         end
-        fixthisshit:sleep()
     end)
 end
-
-    if ImGui.Button("Play") then
+    if ImGui.Button("   Play    ") then
         if info then
             if info.type == 1 then
                 cleanup()
@@ -104,7 +98,6 @@ end
                         coroutine.yield()
                     end
                     TASK.TASK_PLAY_ANIM(ped, info.dict, info.anim, 4.0, -4.0, -1, info.flag, 1.0, false, false, false)
-                    is_playing_anim = true
                 end)
 
             elseif info.type == 2 then
@@ -120,14 +113,13 @@ end
                         coroutine.yield()
                     end
                     TASK.TASK_PLAY_ANIM(ped, info.dict, info.anim, 4.0, -4.0, -1, info.flag, 0, false, false, false)
-                    type2:sleep(400)
+                    type2:sleep(info.ptfxdelay)
                     GRAPHICS.USE_PARTICLE_FX_ASSET(info.ptfxdict)
                     loopedFX = GRAPHICS.START_NETWORKED_PARTICLE_FX_LOOPED_ON_ENTITY_BONE(info.ptfxname, ped, info.ptfxOffx, info.ptfxOffy, info.ptfxOffz, 0.0, 0.0, 0.0, boneIndex, info.ptfxscale, false, false, false, 0, 0, 0, 0)
                     while STREAMING.HAS_NAMED_PTFX_ASSET_LOADED(info.ptfxdict) do
                         STREAMING.REMOVE_NAMED_PTFX_ASSET(info.ptfxdict)
                         coroutine.yield()
                     end
-                    is_playing_anim = true
                 end)
 
             elseif info.type == 3 then
@@ -137,7 +129,7 @@ end
                         STREAMING.REQUEST_MODEL(info.prop1)
                         coroutine.yield()
                     end
-                    prop1 = OBJECT.CREATE_OBJECT(info.prop1, coords.x + (forwardX), coords.y + (forwardY), coords.z, true, true, false)
+                    prop1 = OBJECT.CREATE_OBJECT(info.prop1, coords.x + forwardX /1.7, coords.y + forwardY /1.7, coords.z, true, true, false)
                     ENTITY.SET_ENTITY_HEADING(prop1, heading)
                     OBJECT.PLACE_OBJECT_ON_GROUND_PROPERLY(prop1)
                     STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(info.prop1)
@@ -147,7 +139,6 @@ end
                         coroutine.yield()
                     end
                     TASK.TASK_PLAY_ANIM(ped, info.dict, info.anim, 4.0, -4.0, -1, info.flag, 1.0, false, false, false)
-                    is_playing_anim = true
                 end)
 
             elseif info.type == 4 then
@@ -169,7 +160,6 @@ end
                     OBJECT.PLACE_OBJECT_ON_GROUND_PROPERLY(prop1)
                     ENTITY.SET_ENTITY_COLLISION(prop1, info.propColl, info.propColl)
                     STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(info.prop1)
-                    is_playing_anim = true
                 end)
             else
                 cleanup()
@@ -180,31 +170,80 @@ end
                         coroutine.yield()
                     end
                     TASK.TASK_PLAY_ANIM(ped, info.dict, info.anim, 4.0, -4.0, -1, info.flag, 0.0, false, false, false)
-                    is_playing_anim = true
                 end)
             end
+        end
+        is_playing_anim = true
+    end
+    if info.name == "Crawl Forward" then
+        if ImGui.IsItemHovered() then
+            ImGui.BeginTooltip()
+            ImGui.Text("Crawl Forward:\nUse 'A/D' To Turn Right/Left.")
+            ImGui.EndTooltip()
+        end
+    elseif info.name == "Goofy Walk" or info.name == "Boss Walk" or info.name == "Goofy Run" then
+        if ImGui.IsItemHovered() then
+            ImGui.BeginTooltip()
+            ImGui.Text("Walk or run after playing the animation.")
+            ImGui.EndTooltip()
+        end
+    elseif info.name == "Sleep" or info.name == "Sunbathe" then
+        if ImGui.IsItemHovered() then
+            ImGui.BeginTooltip()
+            ImGui.Text("Use 'W A S D' to adjust your position.")
+            ImGui.EndTooltip()
+        end
+    elseif info.name == "Crawl Forward Injured" then
+        if ImGui.IsItemHovered() then
+            ImGui.BeginTooltip()
+            ImGui.Text("Use 'A/D' To Turn Right/Left.\nEquip Your Pistol For Better Results.")
+            ImGui.EndTooltip()
+        end
+    elseif info.name == "Commit Seppuku (×_×) (pistol)" then
+        if ImGui.IsItemHovered() then
+            ImGui.BeginTooltip()
+            ImGui.Text("Equip Your Pistol For Better Results.")
+            ImGui.EndTooltip()
         end
     end
 
 ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
+ImGui.Spacing()
+ImGui.SameLine()
 
-    if ImGui.Button("Stop") then
+    if ImGui.Button("   Stop    ") then
         cleanup()
+        is_playing_anim = false
         -- //fix player clipping through the ground after ending low-positioned anims//
         local current_coords = ENTITY.GET_ENTITY_COORDS(ped)
-        ENTITY.SET_ENTITY_COORDS_NO_OFFSET(ped, current_coords.x, current_coords.y, current_coords.z, true, false, false)
-        is_playing_anim = false
-    end
-
-    script.register_looped("Stop Animation", function()
-        if is_playing_anim and PAD.IS_CONTROL_PRESSED(0, 252) then
-            cleanup()
-            -- //fix player clipping through the ground after ending low-positioned anims//
-            local current_coords = ENTITY.GET_ENTITY_COORDS(ped)
+        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+            PED.SET_PED_COORDS_KEEP_VEHICLE(ped, current_coords.x, current_coords.y, current_coords.z)
+        else
             ENTITY.SET_ENTITY_COORDS_NO_OFFSET(ped, current_coords.x, current_coords.y, current_coords.z, true, false, false)
-            is_playing_anim = false
         end
-    end)
+    end
 
     event.register_handler(menu_event.ScriptsReloaded, function()
             GRAPHICS.STOP_PARTICLE_FX_LOOPED(loopedFX)
@@ -224,7 +263,11 @@ ImGui.SameLine()
             end
             -- //fix player clipping through the ground after ending low-positioned anims//
             local current_coords = ENTITY.GET_ENTITY_COORDS(ped)
-            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(ped, current_coords.x, current_coords.y, current_coords.z, true, false, false)
+            if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+                PED.SET_PED_COORDS_KEEP_VEHICLE(ped, current_coords.x, current_coords.y, current_coords.z)
+            else
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(ped, current_coords.x, current_coords.y, current_coords.z, true, false, false)
+            end
     end)
 
     event.register_handler(menu_event.MenuUnloaded, function()
@@ -245,6 +288,10 @@ ImGui.SameLine()
             end
             -- //fix player clipping through the ground after ending low-positioned anims//
             local current_coords = ENTITY.GET_ENTITY_COORDS(ped)
-            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(ped, current_coords.x, current_coords.y, current_coords.z, true, false, false)
+            if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+                PED.SET_PED_COORDS_KEEP_VEHICLE(ped, current_coords.x, current_coords.y, current_coords.z)
+            else
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(ped, current_coords.x, current_coords.y, current_coords.z, true, false, false)
+            end
     end)
 end)
