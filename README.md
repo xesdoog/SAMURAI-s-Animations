@@ -1,5 +1,5 @@
-# <p align="center"> SAMURAI's Animations </p>
-<p align="center"> Lua script to play GTA Online animations using YimMenu. </p>
+# <p align="center"> [OUTDATED] SAMURAI's Animations </p>
+<p align="center"> Play GTA V Animations Using YimMenu. </p>
 
 ##
 
@@ -24,8 +24,8 @@
 ##
 ##
 
-> [!NOTE]
-> Due to life being a pain in my _a$$_, I will not have the time to improve this script so if anybody is willing to contribute animations or new features, feel free to to do so. There will be a short comment at the top of the **[animdata.lua](https://github.com/YimMenu-Lua/SAMURAI-Animations/blob/main/animdata.lua)** file explaining my mess. Pull requests are welcome.
+> [!WARNING]
+> This script will no longer receive updates because it has been improved and moved to [YimActions](https://github.com/xesdoog/YimActions).
 ##
 
 ## FAQ 
